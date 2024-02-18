@@ -10,6 +10,7 @@
   </div>
 
   <Container :insta="insta"/>
+  <button @click="more">더보기</button>
 
   <div class="footer">
     <ul class="footer-button-plus">
@@ -20,8 +21,11 @@
 </template>
 
 <script>
-import Container from './components/Container';
-import insta from './assets/insta';
+import Container from './components/Container'
+import insta from './assets/insta'
+import axios from 'axios'
+axios.post();
+var num = 0;
 
 export default {
   name: 'App',
@@ -32,6 +36,35 @@ export default {
   },
   components: {
     Container : Container,
+  },
+  methods : {
+    more(){
+      // 서버로 GET 요청해서 데이터 가져옴
+      axios.get('https://codingapple1.github.io/vue/more'+num+'.json')
+      
+      /* 
+      then()을 이용해서 GET/POST 요청 성공 이후 실행할 작업을 입력할 수 있음
+      콜백함수 : 함수 안에 함수를 넣는 것 
+      */
+     .then( result =>{
+       /* 
+       function(){} 대신 ()=>{} 쓰는 것이 좋음
+       일반함수는 this가 재정의 되나 arrow function을 사용하면 바깥에 있는 this를 그대로 사용함
+       arrow function은 ()안의 파라미터가 1개면 소괄호 생략 가능
+       */
+      console.log(result.data);
+      this.insta.push(result.data);
+    })
+
+    /* 실패시 실행할 코드는 .catch() */
+    .catch( err =>{
+      console.log(err);
+      alert("오류!");
+    })
+
+    num++;
+    
+    }
   }
 }
 </script>
